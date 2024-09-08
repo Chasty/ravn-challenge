@@ -1,0 +1,10 @@
+schema: https://syn-api-prod.herokuapp.com/graphql
+documents: "./**/*.graphql"
+generates:
+  ./graphql/__generated__/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHooks: true

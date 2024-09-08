@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { SideBar } from "@/components/SideBar";
 import SearchInput from "@/components/Input";
+import { MainProvider } from "@/providers/main.provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,15 +31,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex h-screen bg-neutral-5">
-          <div className="flex flex-1 p-12 gap-8">
-            <SideBar />
-            <div className="flex flex-col flex-1 gap-4">
-              <SearchInput />
-              <main className="flex-1 overflow-y-auto p-4">{children}</main>
+        <MainProvider>
+          <div className="flex h-screen bg-neutral-5">
+            <div className="flex flex-1 p-12 gap-8">
+              <SideBar />
+              <div className="flex flex-col flex-1 gap-4">
+                <SearchInput />
+                <main className="flex-1 overflow-y-auto p-4">{children}</main>
+              </div>
             </div>
           </div>
-        </div>
+        </MainProvider>
       </body>
     </html>
   );

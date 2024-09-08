@@ -2,19 +2,16 @@
 
 import { Icon, IconName } from "./Icon";
 
+export type TypeTag = "general" | "green" | "blue" | "yellow" | "red";
+
 type TagProps = {
   icon?: IconName;
   text?: string;
   style: "solid" | "outline";
-  type: "general" | "green" | "blue" | "yellow" | "red";
+  type: TypeTag;
 };
 
 export const Tag = ({ icon, text, style, type }: TagProps) => {
-  const typeStyles = {
-    primary: `bg-primary-4`,
-    secondary: ``,
-  };
-
   const iconLabelColorType = {
     general: `text-neutral-1`,
     green: "text-secondary-4",

@@ -7,12 +7,22 @@ import { TaskColumn } from "@/components/TaskColumn";
 import { TASKS } from "@/mock/data";
 import { useState } from "react";
 
+import { useQuery } from "@apollo/client";
+import gql from "graphql-tag";
+import GET_TASKS from "../graphql/queries/getTasks.graphql";
+import { GetTasksQuery, Status } from "@/graphql/__generated__/graphql";
+
+const GET_TASKS_QUERY = gql(GET_TASKS); // Parse with graphql-tag
+
 export default function Home() {
-  const [tasks] = useState<{
-    working: Task[];
-    inProgress: Task[];
-    completed: Task[];
-  }>(TASKS);
+  const { data, loading, error } = useQuery<GetTasksQuery>(GET_TASKS_QUERY);
+  const tasks = data?.tasks ?? [];
+
+  console.log({ data, loading, error });
+
+  const tasksByStatus = (status: Status) => {
+    return tasks.filter((task) => task.status === status);
+  };
 
   return (
     <div className="flex flex-col flex-1">
@@ -21,9 +31,31 @@ export default function Home() {
         <Modal />
       </div>
       <div className="flex flex-1 gap-8 mt-6">
-        <TaskColumn title="Working" tasks={tasks.working} />
-        <TaskColumn title="In Progress" tasks={tasks.inProgress} />
-        <TaskColumn title="Completed" tasks={tasks.completed} />
+        <TaskColumn
+          loading={loading}
+          title="Backlog"
+          tasks={tasksByStatus(Status.Backlog)}
+        />
+        <TaskColumn
+          loading={loading}
+          title="Cancelled"
+          tasks={tasksByStatus(Status.Cancelled)}
+        />
+        <TaskColumn
+          loading={loading}
+          title="Done"
+          tasks={tasksByStatus(Status.Done)}
+        />
+        <TaskColumn
+          loading={loading}
+          title="In Progress"
+          tasks={tasksByStatus(Status.InProgress)}
+        />
+        <TaskColumn
+          loading={loading}
+          title="Todo"
+          tasks={tasksByStatus(Status.Todo)}
+        />
       </div>
     </div>
   );

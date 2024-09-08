@@ -1,0 +1,18 @@
+query GetTasks {
+  tasks(input: {}) {
+    assignee {
+      fullName
+    }
+    creator {
+      fullName
+    }
+    dueDate
+    id
+    name
+    pointEstimate
+    status
+    tags
+    createdAt
+    position
+  }
+}

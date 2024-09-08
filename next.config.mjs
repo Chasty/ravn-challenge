@@ -6,6 +6,12 @@ const nextConfig = {
       use: ["@svgr/webpack"],
     });
 
+    config.module.rules.push({
+      test: /\.(graphql|gql)$/,
+      exclude: /node_modules/,
+      use: "raw-loader", // Load `.graphql` files as plain text
+    });
+
     return config;
   },
 };
