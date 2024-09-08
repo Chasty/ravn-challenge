@@ -15,6 +15,10 @@ import Clip from "../assets/icons/Clip.svg";
 import TaskLines from "../assets/icons/TaskLines.svg";
 import Comment from "../assets/icons/Comment.svg";
 import Add from "../assets/icons/Add.svg";
+import Date from "../assets/icons/Date.svg";
+import Label from "../assets/icons/Label.svg";
+import Points from "../assets/icons/Points.svg";
+import User from "../assets/icons/User.svg";
 
 const iconMapping = {
   dashboard: <Dashboard />,
@@ -32,6 +36,10 @@ const iconMapping = {
   taskline: <TaskLines />,
   comment: <Comment />,
   add: <Add />,
+  date: <Date />,
+  label: <Label />,
+  points: <Points />,
+  user: <User />,
 };
 
 // <Hamburguer width="18" height="18" />
