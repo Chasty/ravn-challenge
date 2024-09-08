@@ -17,7 +17,7 @@ export const TaskCard = (props: Task) => {
         <p className="flex-1 font-sans text-body-l-bold text-neutral-1">
           Twitter
         </p>
-        <Icon name="timer" />
+        <Icon name="dots" />
       </div>
       <div className="flex h-fit items-center">
         <p className="flex-1 font-sans text-body-m-bold text-neutral-1">

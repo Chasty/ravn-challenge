@@ -22,7 +22,7 @@ export const SwitchButton = ({ value, onClickOption }: SwitchButtonProps) => {
           setSelectedOption("off");
         }}
         icon="hamburguer"
-        type="secondary"
+        typeStyle="secondary"
         state={off}
       />
       <Button
@@ -31,7 +31,7 @@ export const SwitchButton = ({ value, onClickOption }: SwitchButtonProps) => {
           setSelectedOption("on");
         }}
         icon="dashboard"
-        type="secondary"
+        typeStyle="secondary"
         state={on}
       />
     </div>

@@ -47,7 +47,7 @@ export const Tag = ({ icon, text, style, type }: TagProps) => {
 
   return (
     <div
-      className={`py-1 px-4 bg-p w-fit rounded-md text-neutral-1 flex gap-3 ${bgContainerColor}`}
+      className={`py-1 px-4 bg-p items-center justify-center rounded-md text-neutral-1 flex gap-3 ${bgContainerColor}`}
     >
       {icon ? (
         <div className={`${iconColor}`}>

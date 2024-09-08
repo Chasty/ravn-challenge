@@ -2,20 +2,21 @@
 
 import { Icon, IconName } from "./Icon";
 
-type ButtonProps = {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   onPress?: () => void;
   icon?: IconName;
   text?: string;
-  type: "primary" | "secondary";
+  typeStyle: "primary" | "secondary";
   state?: "default" | "hover" | "selected" | "disable";
-};
+}
 
 export const Button = ({
   onPress,
   icon,
   text,
   state = "default",
-  type,
+  typeStyle,
+  ...props
 }: ButtonProps) => {
   const typeStyles = {
     primary: `bg-primary-4`,
@@ -44,7 +45,7 @@ export const Button = ({
   };
 
   const stateStyle =
-    type === "primary"
+    typeStyle === "primary"
       ? statePrimaryStyles[state]
       : stateSecondaryStyles[state];
 
@@ -55,7 +56,11 @@ export const Button = ({
       className={`p-2 bg-p w-fit rounded-lg flex gap-3 ${stateStyle} ${
         icon && iconBorderStyle
       }`}
-      onClick={onPress}
+      onClick={(e) => {
+        if (props.onClick) props.onClick(e); // Call DialogTrigger's onClick
+        if (onPress) onPress(); // Call custom onPress handler
+      }}
+      {...props} // Pass other props like `onClick`
     >
       {text && text}
       {icon ? (
