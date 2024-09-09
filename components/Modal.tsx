@@ -144,7 +144,7 @@ export function Modal({
     <Dialog open={isModalOpen} onOpenChange={clearAll}>
       {hasTrigger && (
         <DialogTrigger asChild>
-          <DSButton typeStyle="primary" icon="add" />
+          <DSButton typeStyle="primary" icon="add" iconClassName="px-1" />
         </DialogTrigger>
       )}
       <DialogOverlay className="bg-[#00000090]" /> {/* Add this line */}

@@ -8,6 +8,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;
   typeStyle: "primary" | "secondary";
   state?: "default" | "hover" | "selected" | "disable";
+  iconClassName?: string;
 }
 
 export const Button = ({
@@ -16,6 +17,7 @@ export const Button = ({
   text,
   state = "default",
   typeStyle,
+  iconClassName,
   ...props
 }: ButtonProps) => {
   const typeStyles = {
@@ -64,7 +66,11 @@ export const Button = ({
     >
       {text && text}
       {icon ? (
-        <div className={`${state === "selected" ? "text-primary-4" : ""}`}>
+        <div
+          className={`${
+            state === "selected" ? "text-primary-4" : ""
+          } ${iconClassName}`}
+        >
           <Icon name={icon} />{" "}
         </div>
       ) : null}
