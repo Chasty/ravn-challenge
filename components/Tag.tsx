@@ -1,6 +1,7 @@
 "use client";
 
 import { Icon, IconName } from "./Icon";
+import { Avatar } from "./Avatar";
 
 export type TypeTag = "general" | "green" | "blue" | "yellow" | "red";
 
@@ -10,9 +11,17 @@ type TagProps = {
   style: "solid" | "outline";
   type: TypeTag;
   className?: string;
+  avatar?: boolean;
 };
 
-export const Tag = ({ icon, text, style, type, className }: TagProps) => {
+export const Tag = ({
+  icon,
+  text,
+  style,
+  type,
+  className,
+  avatar,
+}: TagProps) => {
   const iconLabelColorType = {
     general: `text-neutral-1`,
     green: "text-secondary-4",
@@ -52,6 +61,8 @@ export const Tag = ({ icon, text, style, type, className }: TagProps) => {
           <Icon name={icon} />{" "}
         </div>
       ) : null}
+
+      {avatar ? <Avatar className="W-[32px] h-[32px]" /> : null}
 
       {text && <p className={`${iconColor} text-body-m-bold`}>{text}</p>}
     </div>

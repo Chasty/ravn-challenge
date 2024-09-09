@@ -191,12 +191,14 @@ export function Modal({
             <PopoverTrigger asChild>
               <Button variant="ghost">
                 <Tag
-                  icon="user"
+                  avatar={!!selectedAssignee}
+                  icon={selectedAssignee ? undefined : "user"}
                   style="solid"
                   type="general"
                   text={
                     selectedAssignee ? selectedAssignee.fullName : "Assignee"
                   }
+                  className="px-8"
                 />
               </Button>
             </PopoverTrigger>
