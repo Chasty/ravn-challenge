@@ -70,3 +70,13 @@ https://github.com/user-attachments/assets/cb82ef0d-d798-4aa2-82c5-c0c4e0fb702a
 - [`models`](./models) - Models according to what the api services respond.
 - [`graphql`](./graphql) - We generate the typescript files according to our codegen.yml config and also we expose the mutations and queries needed on the app.
 - [`lib`](./lib) - Instance generation of Apollo and Utility functions
+
+## NOTES
+
+Very important note.
+
+I'm using shadcn calendar component for selecting due date.
+
+There is an issue that I should report on shadcn's repository, because calendars on a PopOver does not work as expected.
+
+A workaround to be able to show the due date calendar is by having another popover open and then select the due date.
