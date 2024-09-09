@@ -26,7 +26,11 @@ This project demonstrates how to create a task managament app with the following
 
 ## 📱 Preview
 
-REPLACE
+
+
+https://github.com/user-attachments/assets/cb82ef0d-d798-4aa2-82c5-c0c4e0fb702a
+
+
 
 ## 💻 Tech Stack
 
