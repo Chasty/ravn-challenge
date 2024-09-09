@@ -80,3 +80,6 @@ I'm using shadcn calendar component for selecting due date.
 There is an issue that I should report on shadcn's repository, because calendars on a PopOver does not work as expected.
 
 A workaround to be able to show the due date calendar is by having another popover open and then select the due date.
+
+![calendarissue](https://github.com/user-attachments/assets/a1db8da7-328a-4144-94be-8a13eb08ad93)
+
