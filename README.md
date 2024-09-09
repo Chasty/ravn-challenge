@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+  <h1>Ravn Frontend Challenge</h1>
+  <p>This project is a task managament app created from scratch as a submission for the code challenge</p>
 
-## Getting Started
+</div>
 
-First, run the development server:
+## 🎞️ Project Description
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This project demonstrates how to create a task managament app with the following features.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Show tasks in a grid view divided by columns
+- Filter tasks by name
+- Create a task
+- Edit a task
+- Remove a task
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ⬇️ How to get started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `git clone git@github.com:Chasty/ravn-challenge.git`
+- `cd ravn-challenge`
+- `bun`
 
-## Learn More
+## 🏃‍♀️ Running the app
 
-To learn more about Next.js, take a look at the following resources:
+- `bun dev`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📱 Preview
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+REPLACE
 
-## Deploy on Vercel
+## 💻 Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- React
+  - Decided to use this popular framework for creating reusable components.
+  - Using react hooks an custom hooks for handling asyncronous logic and sharing reusable logic across components.
+- Next V14
+  - For routing easily with a folder structure navigation (`file-system based router`) under the `/app` folder
+  - It also has some predefined 404 pages
+  - It optimize image rendering
+- Tailwind
+  - Using tailiwing because of the css-utilities it offers.
+  - It is also fully customizable, you can introduce new themes, colors, typography from your own design system.
+- Shadcn
+  - For complex functionatiles and components, there is no need to reinvent the weel.
+  - It uses tailwind and radix under the hook.
+  - I'm using Dialog, PopOver, Calendar, Skeleton.
+- Graphql
+  - Using graphql for interacting with the api and generating the schema and typescript typings from a graphql server using `graphql-codegen`
+- Apollo Client
+  - Using this to connect the api from the client and using their awesome hooks to work with mutations and queries
+- date-fns
+  - For date formatting and date operations
+- Typescript
+  - Type-safe language to mitigate errors easily and find bugs earlier.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📁 Project Structure
+
+- [`app`](./app) - The navigation structure with three routes defined
+  - `app/page` matches the `/` route
+  - `app/projects` matches the `/projects` route
+  - `app/settings` matches the `/settings` route
+- [`components`](./components) - Our reusable components based on our design system
+- [`components/ui`](./components/ui) - Shadcn ui components to be used.
+- [`assets`](./assets) - All assets like images and icons from design system
+- [`hooks`](./hooks) - Exposed reusable hooks
+- [`models`](./models) - Models according to what the api services respond.
+- [`graphql`](./graphql) - We generate the typescript files according to our codegen.yml config and also we expose the mutations and queries needed on the app.
+- [`lib`](./lib) - Instance generation of Apollo and Utility functions
