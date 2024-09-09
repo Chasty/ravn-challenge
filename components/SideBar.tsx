@@ -49,7 +49,7 @@ export const SideBar = () => {
   const pathname = fullPathname.split("?")[0];
 
   return (
-    <div className="flex w-64 flex-col items-center bg-neutral-4 rounded-3xl">
+    <div className="flex w-60 flex-col items-center bg-neutral-4 rounded-3xl">
       <Image className="w-[40px] h-[40px] mt-4" src={logoMark} alt="logo" />
       <div className="mt-8">
         {items.map((item, idx) => (

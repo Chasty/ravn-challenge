@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Icon } from "./Icon";
+import { Avatar } from "./Avatar";
 
 interface SearchInputProps {
   placeholder?: string;
@@ -51,7 +52,7 @@ export default function SearchInput({
         <div className="text-neutral-2">
           <Icon name="bell" />
         </div>
-        <div className="w-[40px] h-[40px] bg-neutral-2 rounded-full"></div>
+        <Avatar className="w-[40px] h[400px]" />
       </div>
     </div>
   );

@@ -16,8 +16,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Icon } from "./Icon";
 import { Calendar } from "./ui/calendar";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import Image from "next/image";
-import placeholder from "../assets/placeholder.png";
 import {
   CreateTaskInput,
   Status,
@@ -25,6 +23,7 @@ import {
 } from "@/graphql/__generated__/graphql";
 import { format } from "date-fns";
 import { Assignee, ASSIGNESS, LABELS, Point, POINTS, TagLabel } from "@/models";
+import { Avatar } from "./Avatar";
 
 export type DefaultFormValues = {
   taskTitle?: string;
@@ -212,15 +211,7 @@ export function Modal({
                       handleAssigneeSelect(assignee);
                     }}
                   >
-                    <div className="h-6 w-6 mr-2 rounded-full bg-primary-3">
-                      <Image
-                        src={placeholder.src}
-                        className="rounded-full"
-                        alt="no"
-                        width={"32"}
-                        height={"32"}
-                      />
-                    </div>
+                    <Avatar className="h-5 w-6 mr-2" />
                     {assignee.fullName}
                   </Button>
                 ))}

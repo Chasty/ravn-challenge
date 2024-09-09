@@ -157,7 +157,7 @@ const config: Config = {
         { lineHeight: "32px", letterSpacing: "0.75px", fontWeight: 600 },
       ],
       "body-m-bold": [
-        "15px",
+        "0.75rem",
         { lineHeight: "24px", letterSpacing: "0.75px", fontWeight: 600 },
       ],
       "body-s-bold": [

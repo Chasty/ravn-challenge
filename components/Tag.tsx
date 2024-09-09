@@ -53,7 +53,7 @@ export const Tag = ({ icon, text, style, type, className }: TagProps) => {
         </div>
       ) : null}
 
-      {text && <p className={`${iconColor}`}>{text}</p>}
+      {text && <p className={`${iconColor} text-body-m-bold`}>{text}</p>}
     </div>
   );
 };

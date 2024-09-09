@@ -10,8 +10,6 @@ import {
 } from "@/graphql/__generated__/graphql";
 import { Icon } from "./Icon";
 import { Tag, TypeTag } from "./Tag";
-import Image from "next/image";
-import placeholder from "../assets/placeholder.png";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
 import { DefaultFormValues, Modal } from "./Modal";
@@ -25,6 +23,7 @@ import {
   UPDATE_TASK_MUTATION,
 } from "@/graphql/mutations";
 import { Alert } from "./Alert";
+import { Avatar } from "./Avatar";
 
 export type TaskTagValues = (typeof TaskTag)[keyof typeof TaskTag];
 export type PointEstimateValues =
@@ -185,15 +184,7 @@ export const TaskCard = (props: Task) => {
 
       <div className="flex h-fit items-center">
         <div className="flex flex-1">
-          <div className="w-8 h-8 rounded-full bg-white">
-            <Image
-              src={placeholder.src}
-              className="rounded-full"
-              alt="no"
-              width={"32"}
-              height={"32"}
-            />
-          </div>
+          <Avatar />
         </div>
         <div className="flex gap-4 items-center">
           <Icon name="clip" />
