@@ -1,7 +1,8 @@
 import {
-  CreateTaskInput,
+  DeleteTaskInput,
+  DeleteTaskMutation,
+  DeleteTaskMutationVariables,
   PointEstimate,
-  Task,
   TaskTag,
   UpdateTaskInput,
   UpdateTaskMutation,
@@ -11,23 +12,25 @@ import { Icon } from "./Icon";
 import { Tag, TypeTag } from "./Tag";
 import Image from "next/image";
 import placeholder from "../assets/placeholder.png";
-import { differenceInDays, format, isToday, isYesterday } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
 import { DefaultFormValues, Modal } from "./Modal";
 import { useState } from "react";
 import { ASSIGNESS, LABELS, POINTS } from "@/models";
-
-import gql from "graphql-tag";
-import UPDATE_TASK from "../graphql/mutations/updateTask.graphql";
 import { useMutation } from "@apollo/client";
-const UPDATE_TASK_MUTATION = gql(UPDATE_TASK); // Parse with graphql-tag
+import { timeIndicator } from "@/lib/utils";
+import { Task } from "./TaskColumn";
+import {
+  DELETE_TASK_MUTATION,
+  UPDATE_TASK_MUTATION,
+} from "@/graphql/mutations";
+import { Alert } from "./Alert";
 
 export type TaskTagValues = (typeof TaskTag)[keyof typeof TaskTag];
 export type PointEstimateValues =
   (typeof PointEstimate)[keyof typeof PointEstimate];
 
-const tagMapping: Record<TaskTagValues, TypeTag> = {
+const tagTypeMapping: Record<TaskTagValues, TypeTag> = {
   ANDROID: "yellow",
   IOS: "green",
   NODE_JS: "general",
@@ -43,69 +46,44 @@ export const pointsMapping: Record<PointEstimateValues, string> = {
   EIGHT: "8 Points",
 };
 
-const timeIndicator = (dueDate: Date): { type: TypeTag; text: string } => {
-  const currentDate = new Date();
-
-  const isDueToday = isToday(dueDate);
-  const isDueYesterday = isYesterday(dueDate);
-  const diffInDays = differenceInDays(dueDate, currentDate);
-
-  const getType = () => {
-    if (dueDate >= currentDate) {
-      if (isDueToday) {
-        return "general";
-      }
-
-      if (diffInDays <= 2) {
-        return "yellow";
-      }
-
-      return "general";
-    }
-
-    return "red";
-  };
-
-  const getText = () => {
-    if (dueDate >= currentDate) {
-      if (isDueToday) {
-        return "TODAY";
-      }
-
-      return format(dueDate, "dd MMM, yyyy");
-    }
-
-    if (isDueYesterday) {
-      return "YESTERDAY";
-    }
-
-    return format(dueDate, "dd MMM, yyyy");
-  };
-
-  return {
-    type: getType(),
-    text: getText().toUpperCase(),
-  };
-};
-
 export const TaskCard = (props: Task) => {
   const { name, pointEstimate, tags, dueDate } = props;
 
-  const [updateTask, { loading, error }] = useMutation<
+  const [updateTask] = useMutation<
     UpdateTaskMutation,
     UpdateTaskMutationVariables
   >(UPDATE_TASK_MUTATION);
 
+  const [deleteTask] = useMutation<
+    DeleteTaskMutation,
+    DeleteTaskMutationVariables
+  >(DELETE_TASK_MUTATION, { refetchQueries: ["GetTasks"] });
+
   const { text, type } = timeIndicator(new Date(dueDate));
   const [openModal, setOpenModal] = useState(false);
   const [defaultValues, setDefaultValues] = useState<DefaultFormValues>();
+  const [showAlert, setShowAlert] = useState(false);
 
-  const handleUpdateTask = async (input: CreateTaskInput | UpdateTaskInput) => {
-    //e.preventDefault();
+  const handleUpdateTask = async (input: UpdateTaskInput) => {
     try {
       const result = await updateTask({
         variables: {
-          input: input as UpdateTaskInput,
+          input,
+        },
+      });
+
+      //trigger refetch on page.tsx
+      console.log(result);
+    } catch (err) {
+      console.error("Error creating task:", err);
+    }
+  };
+
+  const handleDeleteTask = async (input: DeleteTaskInput) => {
+    try {
+      const result = await deleteTask({
+        variables: {
+          input: input,
         },
       });
 
@@ -134,7 +112,7 @@ export const TaskCard = (props: Task) => {
   };
 
   const onDelete = () => {
-    //setOpenModal(true);
+    setShowAlert(true);
   };
 
   return (
@@ -147,6 +125,14 @@ export const TaskCard = (props: Task) => {
         openModal={openModal}
         onOpenChange={(open) => setOpenModal(open)}
         defaultValues={defaultValues}
+      />
+      <Alert
+        open={showAlert}
+        onOpenChange={(open) => setShowAlert(open)}
+        onCofirm={() => {
+          handleDeleteTask({ id: props.id });
+          setShowAlert(false);
+        }}
       />
       <div className="flex h-fit items-center">
         <p className="flex-1 font-sans text-body-l-bold text-neutral-1">
@@ -175,6 +161,7 @@ export const TaskCard = (props: Task) => {
             <Button
               variant="ghost"
               className="flex justify-start text-neutral-1"
+              onClick={onDelete}
             >
               <Icon name="trash" />
               <span className="font-sans ml-4 text-body-m">Delete</span>
@@ -194,7 +181,7 @@ export const TaskCard = (props: Task) => {
             key={`${tag}-${idx}`}
             style="solid"
             text={tag}
-            type={tagMapping[tag]}
+            type={tagTypeMapping[tag]}
           />
         ))}
       </div>

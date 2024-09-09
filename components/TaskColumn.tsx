@@ -1,7 +1,9 @@
-import { Task } from "@/graphql/__generated__/graphql";
+import { GetTasksQuery } from "@/graphql/__generated__/graphql";
 import { TaskCard } from "./TaskCard";
 import { EmptyTaskCard } from "./EmptyTaskCard";
 import { Skeleton } from "./ui/skeleton";
+
+export type Task = GetTasksQuery["tasks"][0];
 
 interface TaskColumnProps {
   title: string;
