@@ -15,15 +15,15 @@ import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Icon } from "./Icon";
 import { Calendar } from "./ui/calendar";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import {
   CreateTaskInput,
   Status,
   UpdateTaskInput,
 } from "@/graphql/__generated__/graphql";
 import { format } from "date-fns";
-import { Assignee, ASSIGNESS, LABELS, Point, POINTS, TagLabel } from "@/models";
+import { Assignee, ASSIGNESS, Point, POINTS, TagLabel } from "@/models";
 import { Avatar } from "./Avatar";
+import { useModalForm } from "@/hooks/useModalForm";
 
 export type DefaultFormValues = {
   taskTitle?: string;
@@ -48,97 +48,31 @@ export function Modal({
   onSubmit,
   onOpenChange,
 }: ModalProps) {
-  const [taskTitle, setTaskTitle] = useState("");
-  const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
-
-  const [selectedAssignee, setSelectedAssignee] = useState<Assignee | null>(
-    null
-  );
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [isEstimeOpen, setIsEstimeOpen] = useState(false);
-  const [selectedEstimate, setSelectedEstimate] = useState<Point | null>(null);
-
-  const [isDateOpen, setIsDateOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-
-  const [tags, setTags] = useState<TagLabel[]>(LABELS);
-  const [isTagsOpen, setIsTagsOpen] = useState(false);
-
-  const selectedTags = tags.filter((t) => t.isChecked);
-
-  const handleAssigneeSelect = useCallback((assignee: Assignee) => {
-    setSelectedAssignee(assignee);
-    setIsAssigneeOpen(false);
-  }, []);
-
-  const handleEstimateSelect = useCallback((estimate: Point) => {
-    setSelectedEstimate(estimate);
-    setIsEstimeOpen(false);
-  }, []);
-
-  const handleDateSelect = useCallback((date: Date | undefined) => {
-    setSelectedDate(date);
-    setIsDateOpen(false);
-  }, []);
-
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTaskTitle(e.target.value);
-  };
-
-  const handleLabelSelect = useCallback(
-    (index: number) => {
-      const prevData = [...tags];
-
-      prevData[index].isChecked = !prevData[index].isChecked;
-
-      setTags(prevData);
-      setTimeout(() => {
-        setIsTagsOpen(false);
-      }, 100);
-    },
-    [tags]
-  );
-
-  useEffect(() => {
-    setIsModalOpen(Boolean(openModal));
-  }, [openModal]);
-
-  useEffect(() => {
-    if (defaultValues?.taskTitle) {
-      setTaskTitle(defaultValues.taskTitle);
-    }
-    if (defaultValues?.selectedAssignee) {
-      setSelectedAssignee(defaultValues.selectedAssignee);
-    }
-    if (defaultValues?.selectedEstimate) {
-      setSelectedEstimate(defaultValues.selectedEstimate);
-    }
-    if (defaultValues?.defaultTags) {
-      setTags(defaultValues.defaultTags);
-    }
-    if (defaultValues?.selectedDueDate) {
-      setSelectedDate(defaultValues.selectedDueDate);
-    }
-  }, [defaultValues]);
-
-  const clearAll = (open: boolean) => {
-    setSelectedAssignee(null);
-    setSelectedEstimate(null);
-    setSelectedDate(undefined);
-    setTags([...LABELS].map((m) => ({ ...m, isChecked: false })));
-    setIsModalOpen(open);
-    setTaskTitle("");
-    onOpenChange?.(open);
-  };
-
-  const isAllValid =
-    taskTitle.length > 0 &&
-    selectedAssignee &&
-    selectedEstimate &&
-    selectedDate &&
-    selectedTags.length > 0;
+  const {
+    isModalOpen,
+    clearAll,
+    taskTitle,
+    onChange,
+    isEstimeOpen,
+    setIsEstimeOpen,
+    selectedEstimate,
+    handleEstimateSelect,
+    isAssigneeOpen,
+    setIsAssigneeOpen,
+    selectedAssignee,
+    handleAssigneeSelect,
+    isTagsOpen,
+    setIsTagsOpen,
+    tags,
+    handleLabelSelect,
+    selectedTags,
+    isDateOpen,
+    setIsDateOpen,
+    selectedDate,
+    handleDateSelect,
+    isAllValid,
+    setIsModalOpen,
+  } = useModalForm({ onOpenChange, openModal, defaultValues });
 
   return (
     <Dialog open={isModalOpen} onOpenChange={clearAll}>
@@ -306,7 +240,7 @@ export function Modal({
             typeStyle="primary"
             text={!openModal ? "Create" : "Update"}
             onPress={() => {
-              if (isAllValid) {
+              if (isAllValid && selectedAssignee && selectedEstimate) {
                 setIsModalOpen(false);
                 const inputToSubmit: CreateTaskInput = {
                   assigneeId: selectedAssignee.id,
