@@ -20,11 +20,6 @@ export const Button = ({
   iconClassName,
   ...props
 }: ButtonProps) => {
-  const typeStyles = {
-    primary: `bg-primary-4`,
-    secondary: ``,
-  };
-
   const statePrimaryStyles = {
     default: `bg-primary-4 hover:bg-primary-2`,
     hover: "bg-primary-2",
