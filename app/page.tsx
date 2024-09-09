@@ -34,8 +34,6 @@ export default function Home() {
         },
       });
 
-      alert("Wtf");
-
       refetch();
       console.log(result);
     } catch (err) {

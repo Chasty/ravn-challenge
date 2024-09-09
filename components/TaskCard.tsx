@@ -71,8 +71,6 @@ export const TaskCard = (props: Task) => {
           input,
         },
       });
-
-      //trigger refetch on page.tsx
       console.log(result);
     } catch (err) {
       console.error("Error creating task:", err);
@@ -87,7 +85,6 @@ export const TaskCard = (props: Task) => {
         },
       });
 
-      //trigger refetch on page.tsx
       console.log(result);
     } catch (err) {
       console.error("Error creating task:", err);
@@ -118,10 +115,10 @@ export const TaskCard = (props: Task) => {
   return (
     <div className="flex flex-col p-4 rounded-lg gap-4 bg-neutral-4">
       <Modal
-        onSubmit={(input) =>
-          //TODO: when finishing editing the edit botton is not longer opening
-          handleUpdateTask({ ...input, id: props.id, status: props.status })
-        }
+        onSubmit={(input) => {
+          handleUpdateTask({ ...input, id: props.id, status: props.status });
+          setOpenModal(false);
+        }}
         openModal={openModal}
         onOpenChange={(open) => setOpenModal(open)}
         defaultValues={defaultValues}
