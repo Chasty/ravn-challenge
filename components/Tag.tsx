@@ -9,9 +9,10 @@ type TagProps = {
   text?: string;
   style: "solid" | "outline";
   type: TypeTag;
+  className?: string;
 };
 
-export const Tag = ({ icon, text, style, type }: TagProps) => {
+export const Tag = ({ icon, text, style, type, className }: TagProps) => {
   const iconLabelColorType = {
     general: `text-neutral-1`,
     green: "text-secondary-4",
@@ -44,7 +45,7 @@ export const Tag = ({ icon, text, style, type }: TagProps) => {
 
   return (
     <div
-      className={`py-1 px-4 bg-p items-center justify-center rounded-md text-neutral-1 flex gap-3 ${bgContainerColor}`}
+      className={`py-1 px-4 bg-p items-center justify-center rounded-md text-neutral-1 flex gap-3 ${bgContainerColor} ${className}`}
     >
       {icon ? (
         <div className={`${iconColor}`}>

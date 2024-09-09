@@ -1,7 +1,6 @@
-query GetTasks {
-  tasks(input: {}) {
+mutation CreateTask($input: CreateTaskInput!) {
+  createTask(input: $input) {
     assignee {
-      id
       fullName
     }
     creator {

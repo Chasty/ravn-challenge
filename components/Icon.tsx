@@ -19,6 +19,10 @@ import Date from "../assets/icons/Date.svg";
 import Label from "../assets/icons/Label.svg";
 import Points from "../assets/icons/Points.svg";
 import User from "../assets/icons/User.svg";
+import Check from "../assets/icons/Check.svg";
+import UnCheck from "../assets/icons/UnCheck.svg";
+import Pen from "../assets/icons/Pen.svg";
+import Trash from "../assets/icons/Trash.svg";
 
 const iconMapping = {
   dashboard: <Dashboard />,
@@ -40,6 +44,10 @@ const iconMapping = {
   label: <Label />,
   points: <Points />,
   user: <User />,
+  check: <Check />,
+  uncheck: <UnCheck />,
+  pen: <Pen />,
+  trash: <Trash />,
 };
 
 // <Hamburguer width="18" height="18" />

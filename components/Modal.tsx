@@ -2,204 +2,338 @@
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
-  DialogHeader,
   DialogOverlay,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tag } from "./Tag";
 import { Button as DSButton } from "./Button";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Icon } from "./Icon";
 import { Calendar } from "./ui/calendar";
-import { useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import Image from "next/image";
+import placeholder from "../assets/placeholder.png";
+import {
+  CreateTaskInput,
+  Status,
+  UpdateTaskInput,
+} from "@/graphql/__generated__/graphql";
+import { format } from "date-fns";
+import { Assignee, ASSIGNESS, LABELS, Point, POINTS, TagLabel } from "@/models";
 
-type Assignee = {
-  id: string;
-  name: string;
-  image: string;
+export type DefaultFormValues = {
+  taskTitle?: string;
+  selectedAssignee?: Assignee;
+  selectedEstimate?: Point;
+  defaultTags?: TagLabel[];
+  selectedDueDate?: Date;
 };
 
-type Point = {
-  id: string;
-  points: string;
-  image: string;
+export type ModalProps = {
+  onSubmit: (input: CreateTaskInput | UpdateTaskInput) => void;
+  openModal?: boolean;
+  hasTrigger?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  defaultValues?: DefaultFormValues;
 };
 
-const points: Point[] = [
-  {
-    id: "1",
-    points: "0 points",
-    image: "/placeholder.svg?height=32&width=32",
-  },
-  {
-    id: "2",
-    points: "1 points",
-    image: "/placeholder.svg?height=32&width=32",
-  },
-  {
-    id: "3",
-    points: "2 points",
-    image: "/placeholder.svg?height=32&width=32",
-  },
-  {
-    id: "4",
-    points: "4 points",
-    image: "/placeholder.svg?height=32&width=32",
-  },
-  {
-    id: "5",
-    points: "8 points",
-    image: "/placeholder.svg?height=32&width=32",
-  },
-];
+export function Modal({
+  openModal,
+  hasTrigger,
+  defaultValues,
+  onSubmit,
+  onOpenChange,
+}: ModalProps) {
+  const [taskTitle, setTaskTitle] = useState("");
+  const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
 
-const assignees: Assignee[] = [
-  {
-    id: "1",
-    name: "Jerome Bell",
-    image: "/placeholder.svg?height=32&width=32",
-  },
-  { id: "2", name: "Robert Fox", image: "/placeholder.svg?height=32&width=32" },
-  {
-    id: "3",
-    name: "Marvin McKinney",
-    image: "/placeholder.svg?height=32&width=32",
-  },
-  {
-    id: "4",
-    name: "Jone Cooper",
-    image: "/placeholder.svg?height=32&width=32",
-  },
-  {
-    id: "5",
-    name: "Ralph Edwards",
-    image: "/placeholder.svg?height=32&width=32",
-  },
-];
+  const [selectedAssignee, setSelectedAssignee] = useState<Assignee | null>(
+    null
+  );
 
-export function Modal() {
-  const [date, setDate] = useState<Date>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [isEstimeOpen, setIsEstimeOpen] = useState(false);
+  const [selectedEstimate, setSelectedEstimate] = useState<Point | null>(null);
+
+  const [isDateOpen, setIsDateOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+
+  const [tags, setTags] = useState<TagLabel[]>(LABELS);
+  const [isTagsOpen, setIsTagsOpen] = useState(false);
+
+  const selectedTags = tags.filter((t) => t.isChecked);
+
+  const handleAssigneeSelect = useCallback((assignee: Assignee) => {
+    setSelectedAssignee(assignee);
+    setIsAssigneeOpen(false);
+  }, []);
+
+  const handleEstimateSelect = useCallback((estimate: Point) => {
+    setSelectedEstimate(estimate);
+    setIsEstimeOpen(false);
+  }, []);
+
+  const handleDateSelect = useCallback((date: Date | undefined) => {
+    setSelectedDate(date);
+    setIsDateOpen(false);
+  }, []);
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTaskTitle(e.target.value);
+  };
+
+  const handleLabelSelect = useCallback(
+    (index: number) => {
+      const prevData = [...tags];
+
+      prevData[index].isChecked = !prevData[index].isChecked;
+
+      setTags(prevData);
+      setTimeout(() => {
+        setIsTagsOpen(false);
+      }, 100);
+    },
+    [tags]
+  );
+
+  useEffect(() => {
+    setIsModalOpen(Boolean(openModal));
+  }, [openModal]);
+
+  useEffect(() => {
+    if (defaultValues?.taskTitle) {
+      setTaskTitle(defaultValues.taskTitle);
+    }
+    if (defaultValues?.selectedAssignee) {
+      setSelectedAssignee(defaultValues.selectedAssignee);
+    }
+    if (defaultValues?.selectedEstimate) {
+      setSelectedEstimate(defaultValues.selectedEstimate);
+    }
+    if (defaultValues?.defaultTags) {
+      setTags(defaultValues.defaultTags);
+    }
+    if (defaultValues?.selectedDueDate) {
+      setSelectedDate(defaultValues.selectedDueDate);
+    }
+  }, [defaultValues]);
+
+  const clearAll = (open: boolean) => {
+    setSelectedAssignee(null);
+    setSelectedEstimate(null);
+    setSelectedDate(undefined);
+    setTags([...LABELS].map((m) => ({ ...m, isChecked: false })));
+    setIsModalOpen(open);
+    setTaskTitle("");
+    onOpenChange?.(open);
+  };
+
+  const isAllValid =
+    taskTitle.length > 0 &&
+    selectedAssignee &&
+    selectedEstimate &&
+    selectedDate &&
+    selectedTags.length > 0;
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        {/* <Button variant="outline">Edit Profile</Button> */}
-        <DSButton typeStyle="primary" icon="add" />
-      </DialogTrigger>
+    <Dialog open={isModalOpen} onOpenChange={clearAll}>
+      {hasTrigger && (
+        <DialogTrigger asChild>
+          <DSButton typeStyle="primary" icon="add" />
+        </DialogTrigger>
+      )}
       <DialogOverlay className="bg-[#00000090]" /> {/* Add this line */}
-      <DialogContent className="sm:max-w-[660px] bg-neutral-3">
+      <DialogContent className="sm:max-w-[700px] bg-neutral-3">
         <Input
-          value=""
-          className="border-0 font-sans !text-body-xl-bold text-neutral-2"
+          value={taskTitle}
+          className="border-0 font-sans !text-body-xl-bold text-neutral-2 focus:border-neutral-2"
           placeholder="Task Title"
+          onChange={onChange}
         />
+
         <div className="grid grid-cols-4 gap-4 py-4">
-          <Popover>
+          <Popover open={isEstimeOpen} onOpenChange={setIsEstimeOpen}>
             <PopoverTrigger asChild>
               <Button variant="ghost">
                 <Tag
                   icon="points"
                   style="solid"
                   type="general"
-                  text="Estimate"
+                  text={selectedEstimate ? selectedEstimate.points : "Estimate"}
                 />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-40 bg-neutral-4">
               <div className="space-y-2">
-                {points.map((point) => (
+                {POINTS.map((point) => (
                   <Button
                     key={`point-${point.id}`}
                     variant="ghost"
                     className="w-full justify-start text-neutral-1"
                     onClick={() => {
-                      //setSelectedAssignee(assignee)
+                      handleEstimateSelect(point);
                     }}
                   >
-                    <div className="h-6 w-6 mr-2 rounded-full bg-primary-3"></div>
-                    {point.points}
+                    <Icon name="points" />
+                    <span className="ml-4">{point.points}</span>
                   </Button>
                 ))}
               </div>
             </PopoverContent>
           </Popover>
 
-          <Popover>
+          <Popover open={isAssigneeOpen} onOpenChange={setIsAssigneeOpen}>
             <PopoverTrigger asChild>
               <Button variant="ghost">
-                <Tag icon="user" style="solid" type="general" text="Asignee" />
+                <Tag
+                  icon="user"
+                  style="solid"
+                  type="general"
+                  text={
+                    selectedAssignee ? selectedAssignee.fullName : "Assignee"
+                  }
+                />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-60 bg-neutral-4">
               <div className="space-y-2">
-                {assignees.map((assignee) => (
+                {ASSIGNESS.map((assignee) => (
                   <Button
                     key={assignee.id}
                     variant="ghost"
                     className="w-full justify-start text-neutral-1"
                     onClick={() => {
-                      //setSelectedAssignee(assignee)
+                      handleAssigneeSelect(assignee);
                     }}
                   >
-                    <div className="h-6 w-6 mr-2 rounded-full bg-primary-3"></div>
-                    {assignee.name}
+                    <div className="h-6 w-6 mr-2 rounded-full bg-primary-3">
+                      <Image
+                        src={placeholder.src}
+                        className="rounded-full"
+                        alt="no"
+                        width={"32"}
+                        height={"32"}
+                      />
+                    </div>
+                    {assignee.fullName}
                   </Button>
                 ))}
               </div>
             </PopoverContent>
           </Popover>
 
-          <Popover>
+          <Popover open={isTagsOpen} onOpenChange={setIsTagsOpen}>
             <PopoverTrigger asChild>
               <Button variant="ghost">
                 <Tag icon="label" style="solid" type="general" text="Label" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-60">
+            <PopoverContent className="w-60 bg-neutral-4">
               <div className="space-y-2">
-                {assignees.map((assignee) => (
+                {tags.map((tag, idx) => (
                   <Button
-                    key={assignee.id}
+                    key={`tag-${tag.id}`}
                     variant="ghost"
-                    className="w-full justify-start"
+                    className="w-full justify-start text-neutral-1 hover:bg-transparent hover:text-white cursor-pointer"
                     onClick={() => {
                       //setSelectedAssignee(assignee)
+                      handleLabelSelect(idx);
                     }}
                   >
-                    <div className="h-6 w-6 mr-2 bg-primary-3"></div>
-                    {assignee.name}
+                    <Icon name={tag.isChecked ? "check" : "uncheck"} />
+                    <span className="ml-4">{tag.label}</span>
                   </Button>
                 ))}
               </div>
             </PopoverContent>
           </Popover>
 
-          <Popover>
+          <Popover open={isDateOpen} onOpenChange={setIsDateOpen}>
             <PopoverTrigger asChild>
               <Button variant="ghost">
-                <Tag icon="date" style="solid" type="general" text="Due Date" />
+                <Tag
+                  icon="date"
+                  style="solid"
+                  type="general"
+                  text={
+                    selectedDate
+                      ? format(selectedDate, "MMM d, yyyy")
+                      : "Due date"
+                  }
+                />
               </Button>
             </PopoverTrigger>
+
             <PopoverContent className="w-auto p-0">
               <Calendar
                 mode="single"
-                selected={date}
-                onSelect={setDate}
+                selected={selectedDate}
+                onSelect={handleDateSelect}
                 initialFocus
+                className="bg-neutral-4 text-neutral-1"
               />
             </PopoverContent>
           </Popover>
         </div>
+
+        <div className="grid grid-cols-4 gap-4 py-4">
+          <div className="col-start-3 flex flex-col gap-2">
+            {selectedTags.length > 0 ? (
+              <>
+                <span className="font-sans text-body-m-bold text-neutral-2 text-center">
+                  Selected Tags
+                </span>
+
+                {selectedTags.map((tag, idx) => (
+                  <Tag
+                    key={`check-${idx}`}
+                    style="solid"
+                    type="general"
+                    text={tag.label}
+                  />
+                ))}
+              </>
+            ) : null}
+          </div>
+        </div>
+
         <DialogFooter className="sm:justify-end gap-4">
-          <DSButton state="default" typeStyle="secondary" text="Cancel" />
-          <DSButton state="disable" typeStyle="primary" text="Create" />
+          <DialogClose asChild>
+            <DSButton state="default" typeStyle="secondary" text="Cancel" />
+          </DialogClose>
+
+          <DSButton
+            state={isAllValid ? "default" : "disable"}
+            typeStyle="primary"
+            text={!openModal ? "Create" : "Update"}
+            onPress={() => {
+              if (isAllValid) {
+                setIsModalOpen(false);
+                const inputToSubmit: CreateTaskInput = {
+                  assigneeId: selectedAssignee.id,
+                  dueDate: selectedDate,
+                  name: taskTitle,
+                  pointEstimate: selectedEstimate.value,
+                  tags: selectedTags.map((tag) => tag.value),
+                  status: Status.Backlog,
+                };
+
+                if (!openModal) {
+                  // should create here
+                  onSubmit(inputToSubmit);
+                } else {
+                  // should edit here
+                  onSubmit(inputToSubmit);
+                }
+              }
+            }}
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>
