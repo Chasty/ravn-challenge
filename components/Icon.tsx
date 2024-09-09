@@ -7,7 +7,7 @@ import Settings from "../assets/icons/Settings.svg";
 import Clock from "../assets/icons/Clock.svg";
 import Project from "../assets/icons/Project.svg";
 import Report from "../assets/icons/Report.svg";
-import Search from "../assets/icons/search.svg";
+import Search from "../assets/icons/Search.svg";
 import Bell from "../assets/icons/Bell.svg";
 import Dots from "../assets/icons/Dots.svg";
 import Timer from "../assets/icons/Timer.svg";
