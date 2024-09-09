@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { Avatar } from "./Avatar";
+import { useSearch } from "@/providers/search.provider";
 
 interface SearchInputProps {
   placeholder?: string;
@@ -13,12 +14,17 @@ export default function SearchInput({
 }: SearchInputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const { updateSearch } = useSearch();
 
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setInputValue(e.target.value);
   const handleClear = () => setInputValue("");
+
+  useEffect(() => {
+    updateSearch(inputValue);
+  }, [inputValue, updateSearch]);
 
   return (
     <div

@@ -165,7 +165,9 @@ export type UpdateTaskMutationVariables = Exact<{
 
 export type UpdateTaskMutation = { __typename?: 'Mutation', updateTask: { __typename?: 'Task', dueDate: any, id: string, name: string, pointEstimate: PointEstimate, status: Status, tags: Array<TaskTag>, createdAt: any, position: number, assignee?: { __typename?: 'User', fullName: string } | null, creator: { __typename?: 'User', fullName: string } } };
 
-export type GetTasksQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetTasksQueryVariables = Exact<{
+  input: FilterTaskInput;
+}>;
 
 
 export type GetTasksQuery = { __typename?: 'Query', tasks: Array<{ __typename?: 'Task', dueDate: any, id: string, name: string, pointEstimate: PointEstimate, status: Status, tags: Array<TaskTag>, createdAt: any, position: number, assignee?: { __typename?: 'User', id: string, fullName: string } | null, creator: { __typename?: 'User', fullName: string } }> };
@@ -298,8 +300,8 @@ export type UpdateTaskMutationHookResult = ReturnType<typeof useUpdateTaskMutati
 export type UpdateTaskMutationResult = Apollo.MutationResult<UpdateTaskMutation>;
 export type UpdateTaskMutationOptions = Apollo.BaseMutationOptions<UpdateTaskMutation, UpdateTaskMutationVariables>;
 export const GetTasksDocument = gql`
-    query GetTasks {
-  tasks(input: {}) {
+    query GetTasks($input: FilterTaskInput!) {
+  tasks(input: $input) {
     assignee {
       id
       fullName
@@ -331,10 +333,11 @@ export const GetTasksDocument = gql`
  * @example
  * const { data, loading, error } = useGetTasksQuery({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
-export function useGetTasksQuery(baseOptions?: Apollo.QueryHookOptions<GetTasksQuery, GetTasksQueryVariables>) {
+export function useGetTasksQuery(baseOptions: Apollo.QueryHookOptions<GetTasksQuery, GetTasksQueryVariables> & ({ variables: GetTasksQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetTasksQuery, GetTasksQueryVariables>(GetTasksDocument, options);
       }

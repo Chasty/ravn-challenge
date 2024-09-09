@@ -8,15 +8,35 @@ import {
   CreateTaskMutation,
   CreateTaskMutationVariables,
   GetTasksQuery,
+  GetTasksQueryVariables,
   Status,
   UpdateTaskInput,
 } from "@/graphql/__generated__/graphql";
 import { CREATE_TASK_MUTATION } from "@/graphql/mutations";
 import { GET_TASKS_QUERY } from "@/graphql/queries";
+import useDebounce from "@/hooks/useDebounce";
+import { useSearch } from "@/providers/search.provider";
 import { useMutation, useQuery } from "@apollo/client";
 
 export default function Home() {
-  const { data, loading, refetch } = useQuery<GetTasksQuery>(GET_TASKS_QUERY);
+  const { search } = useSearch();
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { data, loading, refetch } = useQuery<
+    GetTasksQuery,
+    GetTasksQueryVariables
+  >(GET_TASKS_QUERY, {
+    variables: {
+      input: search
+        ? {
+            name: debouncedSearch,
+            // assigneeId: search,
+            // dueDate: search,
+            // ownerId: search,
+          }
+        : {},
+    },
+  });
 
   const tasks = data?.tasks ?? [];
 

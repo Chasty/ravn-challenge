@@ -1,5 +1,5 @@
-query GetTasks {
-  tasks(input: {}) {
+query GetTasks($input: FilterTaskInput!) {
+  tasks(input: $input) {
     assignee {
       id
       fullName
