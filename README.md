@@ -81,3 +81,8 @@ A workaround to be able to show the due date calendar is by having another popov
 
 ![calendarissue](https://github.com/user-attachments/assets/a1db8da7-328a-4144-94be-8a13eb08ad93)
 
+## FUTURE CONSIDERATIONS
+
+- Make the website completely responsive.
+- Fix the calendar issue.
+- Add `My Task` section ui components. I have no time to complete this part, sorry about it :()
