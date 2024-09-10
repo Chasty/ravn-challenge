@@ -14,6 +14,8 @@ This project demonstrates how to create a task managament app with the following
 - Edit a task
 - Remove a task
 
+You can visit the current project https://ravn-challenge.vercel.app/
+
 ## ⬇️ How to get started
 
 - `git clone git@github.com:Chasty/ravn-challenge.git`
@@ -26,11 +28,7 @@ This project demonstrates how to create a task managament app with the following
 
 ## 📱 Preview
 
-
-
 https://github.com/user-attachments/assets/cb82ef0d-d798-4aa2-82c5-c0c4e0fb702a
-
-
 
 ## 💻 Tech Stack
 
